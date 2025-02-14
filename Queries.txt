@@ -1,0 +1,79 @@
+Hitta Plannamn och Arenanamn för plan_id = 1
+----
+SELECT Planer.plannamn AS Plan, Arenor.arenanamn AS Arena
+FROM Planer
+JOIN Arenor ON Planer.arena = Arenor.arena_id
+WHERE Planer.plan_id = 1;
+----
+eller
+----
+SELECT Planer.plannamn, Arenor.arenanamn 
+FROM Planer, Arenor
+WHERE Planer.arena = Arenor.arena_id
+  AND Planer.plan_id = 1;
+
+
+
+
+
+Hitta namn + lagnamn för spelare
+---
+SELECT fornamn, lag_namn from spelare, lag where lag = lag_id"
+
+
+
+
+
+
+
+-----
+Matcher tabellen
+----
+SELECT 
+    Matcher.match_id, 
+    HomeTeam.lag_namn AS Hemma, 
+    AwayTeam.lag_namn AS Borta,
+    Matcher.datum AS Avspark, 
+    Planer.plannamn AS Plan,
+    Arenor.arenanamn as Arena,
+	CONCAT(LEFT(Domare.fornamn, 1), '.', Domare.efternamn) AS Domare, 
+    Matcher.status, 
+    Matcher.hemmamal, 
+    Matcher.bortamal
+FROM 
+    Matcher
+JOIN 
+    Lag AS HomeTeam ON Matcher.hemmalag = HomeTeam.lag_id
+JOIN 
+    Lag AS AwayTeam ON Matcher.bortalag = AwayTeam.lag_id
+JOIN 
+    Planer ON Matcher.plan = Planer.plan_id
+JOIN 
+    Arenor ON Planer.arena = Arenor.arena_id    
+JOIN 
+    Domare ON Matcher.domare = domare.id
+
+----
+Version 2.0
+----
+SELECT 
+    HomeTeam.lag_namn AS Hemma, 
+    AwayTeam.lag_namn AS Borta,
+    Matcher.datum AS Avspark, 
+    Planer.plannamn AS Plan,
+    Arenor.arenanamn as Arena,
+	CONCAT(LEFT(Domare.fornamn, 1), '.', Domare.efternamn) AS Domare, 
+    Matcher.status,
+    CONCAT(Matcher.hemmamal, ' - ', Matcher.bortamal) AS Resultat
+FROM 
+    Matcher
+JOIN 
+    Lag AS HomeTeam ON Matcher.hemmalag = HomeTeam.lag_id
+JOIN 
+    Lag AS AwayTeam ON Matcher.bortalag = AwayTeam.lag_id
+JOIN 
+    Planer ON Matcher.plan = Planer.plan_id
+JOIN 
+    Arenor ON Planer.arena = Arenor.arena_id    
+JOIN 
+    Domare ON Matcher.domare = domare.id    
